@@ -545,8 +545,14 @@ function loadData() {
     var d = res.record;
     results = d.results||[];
     schedules = d.schedules||[];
-    if (d.teams&&d.teams.length) TEAMS = d.teams;
+    // NEVER load teams from JSONBin — HTML is always source of truth
+    // Only load customRules
     if (d.customRules) customRules = d.customRules;
+    // Push current hardcoded teams back to JSONBin to keep it in sync
+    // This fixes stale team data for all users
+    apiFetch('https://api.jsonbin.io/v3/b/'+binId, {method:'PUT',
+      body:JSON.stringify({results:results,schedules:schedules,teams:TEAMS,customRules:customRules})
+    }, function(){});
     renderAll();
   });
 }
@@ -1058,16 +1064,22 @@ function renderTeamEditor() {
   html+='<span style="font-size:12px;color:var(--mut);">Changes save automatically as you type</span>';
   html+='<span id="team-save-indicator" style="font-size:12px;color:var(--mut);"></span>';
   html+='</div>';
-  html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;">';
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;">';
   TEAMS.forEach(function(t,ti){
-    html+='<div style="background:#f8f9fc;border:1px solid var(--bdr);border-radius:10px;overflow:hidden;">';
+    html+='<div style="background:#f8f9fc;border:1px solid var(--bdr);border-radius:10px;overflow:hidden;" data-ti="'+ti+'">';
+    // Team name + color
     html+='<div style="padding:10px 14px;display:flex;align-items:center;gap:8px;background:'+t.color+'22;border-bottom:2px solid '+t.color+';" id="thdr-'+ti+'">';
     html+='<input type="color" value="'+t.color+'" oninput="updateTeamColor('+ti+',this.value)" style="width:26px;height:26px;border:none;border-radius:4px;padding:0;cursor:pointer;flex-shrink:0;">';
-    html+='<input type="text" value="'+t.name+'" oninput="TEAMS['+ti+'].name=this.value;debounceSaveTeams()" style="flex:1;background:transparent;border:none;color:var(--nav);font-family:Arial,sans-serif;font-size:13px;font-weight:700;outline:none;">';
+    html+='<div style="flex:1;">';
+    html+='<div style="font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Team name</div>';
+    html+='<input type="text" value="'+t.name+'" oninput="TEAMS['+ti+'].name=this.value;debounceSaveTeams()" style="width:100%;background:transparent;border:none;color:var(--nav);font-family:Arial,sans-serif;font-size:13px;font-weight:700;outline:none;">';
+    html+='</div></div>';
+    // Captain
+    html+='<div style="padding:8px 14px;border-bottom:1px solid var(--bdr);">';
+    html+='<div style="font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;">Captain</div>';
+    html+='<input type="text" value="'+(t.captain||'')+'" oninput="TEAMS['+ti+'].captain=this.value;debounceSaveTeams()" placeholder="Captain name" style="width:100%;background:transparent;border:none;color:var(--acc2);font-family:Arial,sans-serif;font-size:12px;font-weight:600;outline:none;">';
     html+='</div>';
-    html+='<div style="padding:6px 14px 8px;border-bottom:1px solid var(--bdr);">';
-    html+='<input type="text" value="'+(t.captain||'')+'" oninput="TEAMS['+ti+'].captain=this.value;debounceSaveTeams()" placeholder="Captain name" style="width:100%;background:transparent;border:none;color:var(--mut);font-family:Arial,sans-serif;font-size:11px;outline:none;">';
-    html+='</div>';
+    // Players
     html+='<div id="plist-'+ti+'" style="padding:8px 14px 4px;">';
     t.players.forEach(function(p,pi){ html+=mkProw(ti,pi,p,t.color); });
     html+='</div>';
