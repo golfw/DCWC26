@@ -164,7 +164,7 @@ tbody tr:hover td{background:#f5f8ff;}
   <div class="hdr-row">
     <div>
       <h1>⚽ EMEA DC WORLD CUP 2026</h1>
-      <p>7 TEAMS · GROUP PHASE + KNOCKOUT · REFEREE: MARTINA AIELLO · KICK-OFF: WEEK OF 18TH</p>
+      <p>8 TEAMS · GROUP PHASE + KNOCKOUT · REFEREE: MARTINA AIELLO · KICK-OFF: WEEK OF 18TH</p>
     </div>
     <div style="display:flex;align-items:center;gap:14px;">
       <div class="live">LIVE</div>
@@ -483,11 +483,13 @@ tbody tr:hover td{background:#f5f8ff;}
 <script>
 var API_KEY = '$2a$10$1YEH86EbgtXteUKCtgiyde2jr2PB0udClbVP9.vvU1AlGVW/J048.';
 var ADMIN_PW = 'emea2026';
-var ROUNDS = [[1,2,3],[4,5,6],[7,8,9],[10,11,12],[13,14,15],[16,17,18],[19,20,21]];
+var ROUNDS = [[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16],[17,18,19,20],[21,22,23,24],[25,26,27,28]];
 
 var TEAMS = [
-  {id:'mea', name:'MEA & ISV', color:'#1D5FA8', captain:'Amine Kajtih',
-   players:['Amine Kajtih','Antonio Marletta','Robin Belvedere','Dana Eichmann','Marc Ferrer','Gwendal Dussart','Katarina Rusnakova','Ruba Ammar','Ghiwa Saleh']},
+  {id:'mea', name:'MEA', color:'#1D5FA8', captain:'Amine Kajtih',
+   players:['Amine Kajtih','Gwendal Dussart','Ruba Ammar','Ghiwa Saleh','Katarina Rusnakova']},
+  {id:'isv', name:'ISV', color:'#0e7c86', captain:'Lucia Ciufici',
+   players:['Lucia Ciufici','Dana Eichmann','Marc Ferrer','Robin Belvedere','Antonio Marletta']},
   {id:'uk', name:'UK', color:'#c0392b', captain:'John Gomes Luis',
    players:['John Gomes Luis','Emma Godley','Caolan Dignam','Samuel Spence','Elena Cruickshank Godoy','Margot Bontemps']},
   {id:'nor', name:'Nordics & Benelux', color:'#1a7a4a', captain:'Ronan Byrne',
@@ -503,13 +505,13 @@ var TEAMS = [
 ];
 
 var FIXTURES = [
-  [1,'mea','uk'],[2,'nor','cen'],[3,'dach','sth'],
-  [4,'mea','nor'],[5,'uk','dach'],[6,'cen','aca'],
-  [7,'mea','dach'],[8,'uk','sth'],[9,'nor','aca'],
-  [10,'mea','cen'],[11,'uk','aca'],[12,'sth','nor'],
-  [13,'mea','sth'],[14,'uk','nor'],[15,'dach','cen'],
-  [16,'mea','aca'],[17,'dach','aca'],[18,'sth','cen'],
-  [19,'uk','cen'],[20,'dach','nor'],[21,'sth','aca']
+  [1,'mea','aca'],[2,'isv','sth'],[3,'uk','dach'],[4,'nor','cen'],
+  [5,'mea','sth'],[6,'aca','dach'],[7,'isv','cen'],[8,'uk','nor'],
+  [9,'mea','dach'],[10,'sth','cen'],[11,'aca','nor'],[12,'isv','uk'],
+  [13,'mea','cen'],[14,'dach','nor'],[15,'sth','uk'],[16,'aca','isv'],
+  [17,'mea','nor'],[18,'cen','uk'],[19,'dach','isv'],[20,'sth','aca'],
+  [21,'mea','uk'],[22,'nor','isv'],[23,'cen','aca'],[24,'dach','sth'],
+  [25,'mea','isv'],[26,'uk','aca'],[27,'nor','sth'],[28,'cen','dach']
 ];
 
 var binId = '6a01f6d1adc21f119a84eca6';
@@ -580,7 +582,7 @@ function renderStandings() {
   var ts=results.reduce(function(s,r){return s+(r.surv1||[]).length+(r.surv2||[]).length;},0);
   var tm=results.reduce(function(s,r){return s+(r.meet1||0)+(r.meet2||0);},0);
   document.getElementById('s-played').textContent=results.length;
-  document.getElementById('s-left').textContent=21-results.length;
+  document.getElementById('s-left').textContent=28-results.length;
   document.getElementById('s-meet').textContent=tm;
   document.getElementById('s-surv').textContent=ts;
 }
@@ -860,7 +862,7 @@ function resetAll() {
 function renderLog() {
   var body=document.getElementById('log-body');
   var total=results.filter(function(r){return typeof r.mid==='number';}).length;
-  document.getElementById('log-count').textContent='('+total+'/21 group'+( results.length-total>0?' + '+(results.length-total)+' KO':'')+')';
+  document.getElementById('log-count').textContent='('+total+'/28 group'+( results.length-total>0?' + '+(results.length-total)+' KO':'')+')';
   if(!results.length){body.innerHTML='<div class="empty">No results yet.</div>';return;}
   var html='';
   results.slice().sort(function(a,b){
@@ -1624,7 +1626,7 @@ function renderKnockout() {
   html += '</div>';
 
   if (groupDone < 21) {
-    html += '<p style="font-size:11px;color:var(--mut);margin-top:16px;">'+groupDone+'/21 group matches played — top 4 will be confirmed when the group stage is complete.</p>';
+    html += '<p style="font-size:11px;color:var(--mut);margin-top:16px;">'+groupDone+'/28 group matches played — top 4 will be confirmed when the group stage is complete.</p>';
   }
 
   el.innerHTML = html;
