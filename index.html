@@ -536,10 +536,17 @@ function loadData() {
 }
 
 function saveData(cb) {
-  apiFetch('https://api.jsonbin.io/v3/b/'+binId, {method:'PUT', body:JSON.stringify({results:results,schedules:schedules,teams:TEAMS,customRules:customRules})}, function(err) {
-    if (err) { toast('Save failed','err'); return; }
+  fetch('/api/results', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer '+ADMIN_PW},
+    body: JSON.stringify({results:results,schedules:schedules,customRules:customRules})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if (d.error) { toast('Save failed','err'); return; }
     if (cb) cb();
-  });
+  })
+  .catch(function(){ toast('Save failed','err'); });
 }
 
 function calcStandings() {
