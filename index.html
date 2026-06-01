@@ -611,8 +611,8 @@ function renderFixtures() {
       var ds=sc&&!done?new Date(sc.date+'T12:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}):'';
 
       if (done && r) {
-        var pts1=(r.surv1||[]).length+(r.meet1||0)*2;
-        var pts2=(r.surv2||[]).length+(r.meet2||0)*2;
+        var pts1=(r.surv1||[]).length+(r.meet1||0);
+        var pts2=(r.surv2||[]).length+(r.meet2||0);
         var winId=pts1>pts2?r.t1:(pts2>pts1?r.t2:null);
         html+='<div style="background:#fff;border:1px solid var(--bdr);border-radius:8px;margin-bottom:6px;overflow:hidden;cursor:pointer;" onclick="showMatchResult('+num+')">';
         // Top row: teams + score
@@ -910,8 +910,8 @@ function renderLog() {
     return bn-an;
   }).forEach(function(r){
     var t1=getTeam(r.t1),t2=getTeam(r.t2);
-    var pts1=(r.surv1||[]).length+(r.meet1||0)*2;
-    var pts2=(r.surv2||[]).length+(r.meet2||0)*2;
+    var pts1=(r.surv1||[]).length+(r.meet1||0);
+    var pts2=(r.surv2||[]).length+(r.meet2||0);
     var label=r.label||(typeof r.mid==='number'?'Match '+r.mid:r.mid);
     var isKo=typeof r.mid!=='number';
     html+='<div class="litem">';
@@ -1404,8 +1404,8 @@ function showMatchResult(num) {
   if(!r) return;
   var f=FIXTURES.filter(function(x){return x[0]===num;})[0];
   var t1=getTeam(f[1]),t2=getTeam(f[2]);
-  var pts1=(r.surv1||[]).length+(r.meet1||0)*2;
-  var pts2=(r.surv2||[]).length+(r.meet2||0)*2;
+  var pts1=(r.surv1||[]).length+(r.meet1||0);
+  var pts2=(r.surv2||[]).length+(r.meet2||0);
   document.getElementById('mm-title').textContent='Match '+num+' — Result';
   var html='';
   html+='<div style="display:flex;align-items:center;justify-content:space-around;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--bdr);">';
@@ -1435,7 +1435,7 @@ function showMatchResult(num) {
       });
     }
     if(meetCount>0){
-      h+='<div style="margin-top:6px;font-size:11px;color:var(--acc2);font-weight:700;">📅 '+meetCount+' meeting'+(meetCount>1?'s':'')+' booked — +'+(meetCount*2)+' pts</div>';
+      h+='<div style="margin-top:6px;font-size:11px;color:var(--acc2);font-weight:700;">📅 '+meetCount+' meeting'+(meetCount>1?'s':'')+' booked — +'+(meetCount)+' pts</div>';
     }
     h+='</div>';
     return h;
@@ -1606,8 +1606,8 @@ function renderKnockout() {
 
   function getWinner(r, t1id, t2id) {
     if (!r) return null;
-    var pts1=(r.surv1||[]).length+(r.meet1||0)*2;
-    var pts2=(r.surv2||[]).length+(r.meet2||0)*2;
+    var pts1=(r.surv1||[]).length+(r.meet1||0);
+    var pts2=(r.surv2||[]).length+(r.meet2||0);
     if (pts1>pts2) return t1id;
     if (pts2>pts1) return t2id;
     return null; // draw — shouldn't happen
@@ -1622,8 +1622,8 @@ function renderKnockout() {
   var champion = finr ? getTeam(getWinner(finr, finr.t1, finr.t2)) : null;
 
   function matchCard(label, teamA, teamB, matchResult, clickId) {
-    var pts1 = matchResult ? (matchResult.surv1||[]).length+(matchResult.meet1||0)*2 : null;
-    var pts2 = matchResult ? (matchResult.surv2||[]).length+(matchResult.meet2||0)*2 : null;
+    var pts1 = matchResult ? (matchResult.surv1||[]).length+(matchResult.meet1||0) : null;
+    var pts2 = matchResult ? (matchResult.surv2||[]).length+(matchResult.meet2||0) : null;
     var winId = matchResult ? getWinner(matchResult, matchResult.t1, matchResult.t2) : null;
     var played = !!matchResult;
     var clickable = played ? 'cursor:pointer;' : '';
@@ -1697,8 +1697,8 @@ function showKoResult(mid) {
   if (!r) return;
   var labels = {'ko-sf1':'Semi-final 1','ko-sf2':'Semi-final 2','ko-final':'Final'};
   var t1=getTeam(r.t1), t2=getTeam(r.t2);
-  var pts1=(r.surv1||[]).length+(r.meet1||0)*2;
-  var pts2=(r.surv2||[]).length+(r.meet2||0)*2;
+  var pts1=(r.surv1||[]).length+(r.meet1||0);
+  var pts2=(r.surv2||[]).length+(r.meet2||0);
   var winId = pts1>pts2?r.t1:(pts2>pts1?r.t2:null);
   document.getElementById('mm-title').textContent=(labels[mid]||mid)+' — Result';
   var html='';
@@ -1724,7 +1724,7 @@ function showKoResult(mid) {
       h+='<span style="width:6px;height:6px;border-radius:50%;background:'+(team?team.color:'#888')+';display:inline-block;flex-shrink:0;"></span>';
       h+=p+'<span style="color:var(--grn);font-size:11px;font-weight:700;margin-left:auto;">+1 pt</span></div>';
     });
-    if(meet>0) h+='<div style="margin-top:6px;font-size:11px;color:var(--acc2);font-weight:700;">📅 '+meet+' meeting'+(meet>1?'s':'')+' booked — +'+(meet*2)+' pts</div>';
+    if(meet>0) h+='<div style="margin-top:6px;font-size:11px;color:var(--acc2);font-weight:700;">📅 '+meet+' meeting'+(meet>1?'s':'')+' booked — +'+(meet)+' pts</div>';
     h+='</div>'; return h;
   }
   html+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
